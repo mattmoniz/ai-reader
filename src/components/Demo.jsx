@@ -31,7 +31,7 @@ const Demo = () => {
       setArticle(newArticle);
       setAllArticles(updatedAllArticles);
 
-      localStorage.setItem("articles",JSON.stringify(updatedAllArticles));
+      localStorage.setItem("articles", JSON.stringify(updatedAllArticles));
     }
   };
 
@@ -66,9 +66,26 @@ const Demo = () => {
         </form>
 
         {/* Browse URL history */}
-
+        <div flex flex-col gap-1 max-h-60 overflow-y-auto>
+          {allArticles.map((item, index) => (
+            <div
+              key={`link-${index}`}
+              onClick={() => setArticle(item)}
+              className="link_card"
+            >
+              <div className="copy_btn">
+                <img src={copy} alt="copy_icon" className="object-contain" />
+              </div>
+              <p className="flex-1 font-satoshi text-blue-700 font-medium text-sm truncate">
+                {item.url}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
       {/* display results */}
+
+
     </section>
   );
 };
