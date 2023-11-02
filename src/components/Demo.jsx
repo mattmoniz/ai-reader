@@ -10,6 +10,7 @@ const Demo = () => {
   });
 
   const [allArticles, setAllArticles] = useState([]);
+  const [copied, setCopied] = useState("")
 
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
 
@@ -34,6 +35,13 @@ const Demo = () => {
       localStorage.setItem("articles", JSON.stringify(updatedAllArticles));
     }
   };
+
+  const handleCopy =(copyUrl) => {
+    setCopied(copyUrl);
+    navigator.clipboard.writeText(copyUrl);
+
+    setTimeout(() => setCopied(false), 3000);
+  }
 
   return (
     <section className="mt-16 w-full max-w-xl">
@@ -73,8 +81,8 @@ const Demo = () => {
               onClick={() => setArticle(item)}
               className="link_card"
             >
-              <div className="copy_btn">
-                <img src={copy} alt="copy_icon" className="object-contain" />
+              <div className="copy_btn" onClick={() => handleCopy(item.url)}>
+                <img src={copied===item.url? tick : copy} alt="copy_icon" className="object-contain" />
               </div>
               <p className="flex-1 font-satoshi text-blue-700 font-medium text-sm truncate">
                 {item.url}
@@ -84,30 +92,25 @@ const Demo = () => {
         </div>
       </div>
       {/* display results */}
-      <div
-        className="my-10 max-w-full flex justify-center items-center">
-          {isFetching ? (
-            <img src={loader} alt="loader" className="w-20 h-20 object-contain"/>
-          ) : error ? (
-            <p className="font-inter font-bold text-black text-center">
-              Well that wasn't supposed to happen...
-
-            </p>
-          ) :(
-            article.summary && (<div className="flex flex-col gap-3">
-                <h3 className="font-satoshi font-bold text-gray-600 text-xl">
-                  Article Summary
-                </h3>
-                <div className="summary_box">
-                  <p>{article.summary}</p>
-
-                </div>
-
-            </div>)
+      <div className="my-10 max-w-full flex justify-center items-center">
+        {isFetching ? (
+          <img src={loader} alt="loader" className="w-20 h-20 object-contain" />
+        ) : error ? (
+          <p className="font-inter font-bold text-black text-center">
+            Well that wasn't supposed to happen...
+          </p>
+        ) : (
+          article.summary && (
+            <div className="flex flex-col gap-3">
+              <h3 className="font-satoshi font-bold text-gray-600 text-xl">
+                Article Summary
+              </h3>
+              <div className="summary_box">
+                <p>{article.summary}</p>
+              </div>
+            </div>
           )
-
-        }
-
+        )}
       </div>
     </section>
   );
